@@ -13,5 +13,14 @@
   "screen.craftanddragons.class_selection.empty": "Nenhuma classe disponível.",
   "screen.craftanddragons.class_selection.no_class": "Este jogador ainda não tem classe.",
   "screen.craftanddragons.class_selection.unavailable": "Esta classe não está mais disponível.",
-  "screen.craftanddragons.class_selection.selected": "Sua classe é %s."
+  "screen.craftanddragons.class_selection.selected": "Sua classe é %s.",
+  "screen.craftanddragons.class_selection.choose": "Escolher classe",
+  "screen.craftanddragons.class_selection.skills": "Habilidades por nível",
+  "screen.craftanddragons.class_selection.no_skills": "Esta classe ainda não tem habilidades registradas.",
+  "screen.craftanddragons.class_selection.level": "Nível %s",
+  "screen.craftanddragons.class_selection.position": "%s / %s",
+  "archetype.craftanddragons.barbarian.name": "Bárbaro",
+  "archetype.craftanddragons.barbarian.description": "Criado onde o frio racha o aço, o Bárbaro veste peles para a batalha. Anos enfrentando invernos brutais fizeram do próprio corpo seu escudo.",
+  "skill.craftanddragons.armorless_defense.name": "Defesa sem Armadura",
+  "skill.craftanddragons.armorless_defense.description": "Ganhe 7 pontos de armadura enquanto todos os espaços de armadura estiverem vazios."
 }

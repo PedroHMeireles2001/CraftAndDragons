@@ -11,6 +11,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ModMessages {
+    private static final String PROTOCOL_VERSION = "2.0";
     private static SimpleChannel INSTANCE;
     private static int packetId = 0;
 
@@ -21,9 +22,9 @@ public class ModMessages {
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
                 .named(ResourceLocation.tryParse("messages"))
-                .networkProtocolVersion(() -> "1.0")
-                .clientAcceptedVersions(s -> true)
-                .serverAcceptedVersions(s -> true)
+                .networkProtocolVersion(() -> PROTOCOL_VERSION)
+                .clientAcceptedVersions(PROTOCOL_VERSION::equals)
+                .serverAcceptedVersions(PROTOCOL_VERSION::equals)
                 .simpleChannel();
 
         INSTANCE = net;

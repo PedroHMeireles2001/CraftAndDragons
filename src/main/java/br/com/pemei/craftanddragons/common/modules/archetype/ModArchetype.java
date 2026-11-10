@@ -15,7 +15,10 @@ public class ModArchetype {
         archetypes.clear();
         subarchetypes.clear();
         xpRequiredForNextLevel = List.of(0d,300d,900d,2700d,6500d,14000d);
-        archetypes.put("barbarian", new PrincipalArchetype("barbarian","Barbarian","lorem ipsum",3, Map.of(1,Set.of(ModSkills.ARMORLESS_DEFENSE)),Set.of(),false,0f,20));
+        archetypes.put("barbarian", new PrincipalArchetype("barbarian", "Barbarian",
+                "Raised where steel cracks in the cold, the Barbarian strides into battle in furs. "
+                        + "Years of hardship have made their body a shield of its own.",
+                3, Map.of(1, Set.of(ModSkills.ARMORLESS_DEFENSE)), Set.of(), false, 0f, 20));
     }
 
     public static Set<String> getArchetypeNames() {

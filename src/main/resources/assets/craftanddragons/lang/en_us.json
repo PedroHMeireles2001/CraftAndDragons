@@ -15,7 +15,14 @@
   "screen.craftanddragons.class_selection.empty": "No classes available.",
   "screen.craftanddragons.class_selection.no_class": "This player has no class.",
   "screen.craftanddragons.class_selection.unavailable": "This class is no longer available.",
-  "screen.craftanddragons.class_selection.selected": "Your class is %s."
+  "screen.craftanddragons.class_selection.selected": "Your class is %s.",
+  "screen.craftanddragons.class_selection.choose": "Choose class",
+  "screen.craftanddragons.class_selection.skills": "Skills by level",
+  "screen.craftanddragons.class_selection.no_skills": "This class has no registered skills.",
+  "screen.craftanddragons.class_selection.level": "Level %s",
+  "screen.craftanddragons.class_selection.position": "%s / %s",
+  "skill.craftanddragons.armorless_defense.name": "Armorless Defense",
+  "skill.craftanddragons.armorless_defense.description": "Gain 7 armor while none of your armor slots are equipped."
 
 
 }

@@ -1,13 +1,18 @@
 package br.com.pemei.craftanddragons.common.modules.archetype;
 
 import br.com.pemei.craftanddragons.common.modules.archetype.capabilities.PlayerClassCapabilityProvider;
+import br.com.pemei.craftanddragons.common.modules.skills.base.Skill;
 import br.com.pemei.craftanddragons.network.ModMessages;
 import br.com.pemei.craftanddragons.network.packet.OpenClassSelectionPacket;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Comparator;
+import java.util.Map;
 
 import static br.com.pemei.craftanddragons.Craftanddragons.MODID;
 
@@ -36,7 +41,17 @@ public final class ClassSelection {
                 .sorted()
                 .map(id -> {
                     var archetype = ModArchetype.getArchetype(id);
-                    return new OpenClassSelectionPacket.Option(id, archetype.getName(), archetype.getDescription());
+                    var levels = archetype.getSkillsPerLevel().entrySet().stream()
+                            .sorted(Map.Entry.comparingByKey())
+                            .map(entry -> new OpenClassSelectionPacket.Level(entry.getKey(), entry.getValue().stream()
+                                    .sorted(Comparator.comparing(Skill::getId))
+                                    .map(skill -> new OpenClassSelectionPacket.SkillInfo(skill.getName(), skill.getDescription()))
+                                    .toList()))
+                            .toList();
+                    String key = "archetype." + MODID + "." + id;
+                    return new OpenClassSelectionPacket.Option(id,
+                            Component.translatableWithFallback(key + ".name", archetype.getName()),
+                            Component.translatableWithFallback(key + ".description", archetype.getDescription()), levels);
                 })
                 .toList();
         ModMessages.sendToPlayer(player, new OpenClassSelectionPacket(options));
