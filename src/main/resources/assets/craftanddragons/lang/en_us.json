@@ -8,7 +8,14 @@
   "enchantment.craftanddragons.vorpal_enchantment": "Vorpal",
   "enchantment.craftanddragons.misanthropy_enchantment": "Misanthropy",
   "enchantment.craftanddragons.holy_enchantment": "Holy",
-  "enchantment.craftanddragons.dragon_slayer_enchantment": "Dragon Slayer"
+  "enchantment.craftanddragons.dragon_slayer_enchantment": "Dragon Slayer",
+  "screen.craftanddragons.class_selection.title": "Choose your class",
+  "screen.craftanddragons.class_selection.confirm": "Choose %s?",
+  "screen.craftanddragons.class_selection.description": "%s\nSwitching to a different class starts it at level 1.",
+  "screen.craftanddragons.class_selection.empty": "No classes available.",
+  "screen.craftanddragons.class_selection.no_class": "This player has no class.",
+  "screen.craftanddragons.class_selection.unavailable": "This class is no longer available.",
+  "screen.craftanddragons.class_selection.selected": "Your class is %s."
 
 
 }

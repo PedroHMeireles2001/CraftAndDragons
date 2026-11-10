@@ -17,7 +17,13 @@ public class TickScheduler {
     private static final List<Task> NEW_TASKS = new ArrayList<>();
 
     public static synchronized void remove(int taskId) {
-        RUNNING_TASKS.removeIf(task -> task.id == taskId);
+        // Uma tarefa pode cancelar a si mesma ou outra tarefa durante a iteração.
+        for (Task task : RUNNING_TASKS) {
+            if (task.id == taskId) {
+                task.cancelled = true;
+                break;
+            }
+        }
         NEW_TASKS.removeIf(task -> task.id == taskId);
     }
 
@@ -29,6 +35,7 @@ public class TickScheduler {
         int duration;
         int executionsLeft;
         boolean loop;
+        boolean cancelled;
         final Runnable action;
 
         Task(int ticks, Runnable action, boolean loop) {
@@ -56,7 +63,7 @@ public class TickScheduler {
             }
         }
         boolean shouldRemove() {
-            return !loop && this.executionsLeft <= 0;
+            return cancelled || (!loop && this.executionsLeft <= 0);
         }
     }
 
@@ -93,6 +100,10 @@ public class TickScheduler {
             Iterator<Task> iterator = RUNNING_TASKS.iterator();
             while (iterator.hasNext()) {
                 Task task = iterator.next();
+                if (task.cancelled) {
+                    iterator.remove();
+                    continue;
+                }
                 task.ticksRemaining--;
 
                 if (task.ticksRemaining <= 0) {

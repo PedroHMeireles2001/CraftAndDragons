@@ -6,5 +6,12 @@
   "container.craftanddragons.item_sacrifice_table": "Mesa de Sacrifício (apenas para items)",
   "block.craftanddragons.item_sacrifice_table": "Extrator de items",
   "enchantment.craftanddragons.misanthropy_enchantment": "Misantropia",
-  "enchantment.craftanddragons.holy_enchantment": "Sagrado"
+  "enchantment.craftanddragons.holy_enchantment": "Sagrado",
+  "screen.craftanddragons.class_selection.title": "Escolha sua classe",
+  "screen.craftanddragons.class_selection.confirm": "Escolher %s?",
+  "screen.craftanddragons.class_selection.description": "%s\nAo trocar de classe, a nova classe começa no nível 1.",
+  "screen.craftanddragons.class_selection.empty": "Nenhuma classe disponível.",
+  "screen.craftanddragons.class_selection.no_class": "Este jogador ainda não tem classe.",
+  "screen.craftanddragons.class_selection.unavailable": "Esta classe não está mais disponível.",
+  "screen.craftanddragons.class_selection.selected": "Sua classe é %s."
 }

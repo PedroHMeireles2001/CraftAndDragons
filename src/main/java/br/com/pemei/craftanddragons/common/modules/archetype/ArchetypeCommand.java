@@ -34,9 +34,10 @@ public class ArchetypeCommand {
 
         dispatcher.register(
                 Commands.literal("rpgclass")
-                        .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("set")
+                                .executes(ctx -> ClassSelection.open(ctx.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
+                                        .requires(source -> source.hasPermission(2))
                                         .then(Commands.argument("rpgclass", StringArgumentType.string())
                                                 .suggests((ctx, builder)-> SharedSuggestionProvider.suggest(ModArchetype.getArchetypeNames(), builder))
                                                 .executes((ctx)-> {
@@ -59,6 +60,7 @@ public class ArchetypeCommand {
                         )
                         .then(
                                 Commands.literal("status")
+                                        .requires(source -> source.hasPermission(2))
                                         .then(
                                                 Commands.argument("player", EntityArgument.player())
                                                         .executes((ctx)-> executePlayerDebug(EntityArgument.getPlayer(ctx,"player")))
@@ -66,6 +68,7 @@ public class ArchetypeCommand {
                         )
                         .then(
                                 Commands.literal("skills")
+                                        .requires(source -> source.hasPermission(2))
                                         .then(
                                                 Commands.argument("rpgclass", StringArgumentType.string())
                                                         .suggests((ctx, builder)-> SharedSuggestionProvider.suggest(ModArchetype.getArchetypeNames(), builder))
@@ -74,6 +77,7 @@ public class ArchetypeCommand {
                         )
                         .then(
                                 Commands.literal("xp")
+                                        .requires(source -> source.hasPermission(2))
                                         .then(Commands.argument("player", EntityArgument.player())) // 1. Adicionado o argumento de player
                                         .then(Commands.argument("amount", DoubleArgumentType.doubleArg(1))
                                                 .executes(ctx-> executeeCapabilityDoubleAction(
@@ -88,6 +92,7 @@ public class ArchetypeCommand {
                         )
                         .then(
                                 Commands.literal("level")
+                                        .requires(source -> source.hasPermission(2))
                                         .then(Commands.literal("add")
                                                 .then(Commands.argument("player", EntityArgument.player())
                                                         .then(Commands.argument("amount", IntegerArgumentType.integer(1))
@@ -141,6 +146,10 @@ public class ArchetypeCommand {
 
     private static int executePlayerDebug(ServerPlayer player) {
         player.getCapability(PlayerClassCapabilityProvider.PLAYER_CLASS).ifPresent(cap -> {
+            if (cap.getArchetype() == null) {
+                player.sendSystemMessage(Component.translatable("screen.craftanddragons.class_selection.no_class"));
+                return;
+            }
             player.sendSystemMessage(Component.literal("Main class: " + cap.getArchetype().getName()));
             player.sendSystemMessage(Component.literal("Main sub class: " + (Objects.nonNull(cap.getSubArchetype()) ? cap.getSubArchetype().getName() : "None")));
             player.sendSystemMessage(Component.literal("Current level: " + cap.getClassLevel()));
