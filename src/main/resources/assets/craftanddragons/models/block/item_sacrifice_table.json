@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/enchanting_table",
+  "textures": {
+    "bottom": "craftanddragons:block/item_sacrifice_table_bottom",
+    "top": "craftanddragons:block/item_sacrifice_table_top",
+    "side": "craftanddragons:block/item_sacrifice_table_side"
+  }
+}

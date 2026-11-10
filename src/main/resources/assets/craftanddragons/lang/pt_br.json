@@ -1,0 +1,10 @@
+{
+  "creativetab.main_tab": "Craft And Dragons",
+  "item.craftanddragons.vorpal_sword": "Espada Vorpal",
+  "tooltip.craftanddragons.vorpal_sword.lore": "\"Snicker-snack!\"",
+  "tooltip.craftanddragons.vorpal_sword.mechanic": "Um 20 natural no ataque garante uma decapitação limpa.",
+  "container.craftanddragons.item_sacrifice_table": "Mesa de Sacrifício (apenas para items)",
+  "block.craftanddragons.item_sacrifice_table": "Extrator de items",
+  "enchantment.craftanddragons.misanthropy_enchantment": "Misantropia",
+  "enchantment.craftanddragons.holy_enchantment": "Sagrado"
+}

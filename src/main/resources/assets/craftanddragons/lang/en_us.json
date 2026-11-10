@@ -1,0 +1,14 @@
+{
+  "creativetab.main_tab": "Craft And Dragons",
+  "item.craftanddragons.vorpal_sword": "Vorpal Sword",
+  "tooltip.craftanddragons.vorpal_sword.lore": "\"Snicker-snack!\"",
+  "tooltip.craftanddragons.vorpal_sword.mechanic": "A natural 20 on attack guarantees a clean decapitation.",
+  "container.craftanddragons.item_sacrifice_table": "Sacrifice table (only for items)",
+  "block.craftanddragons.item_sacrifice_table": "Item Extractor Table",
+  "enchantment.craftanddragons.vorpal_enchantment": "Vorpal",
+  "enchantment.craftanddragons.misanthropy_enchantment": "Misanthropy",
+  "enchantment.craftanddragons.holy_enchantment": "Holy",
+  "enchantment.craftanddragons.dragon_slayer_enchantment": "Dragon Slayer"
+
+
+}
