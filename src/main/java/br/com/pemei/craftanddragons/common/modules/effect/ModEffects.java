@@ -29,6 +29,7 @@ public class ModEffects {
     public static EffectExecutor VORPAL_EFFECT = registerEffect("vorpal", VorpalEffect::new);
 
     public static EffectExecutor ARMORLESS_DEFENSE = new LoopDecorator(
+            
             new ConditionalDecorator(
                     new PermanentAttributeModifierEffect("armorless_defense",true,true,noEnchantment,true,0f,true, Attributes.ARMOR, AttributeModifier.Operation.ADDITION,7),
                     (ctx)-> isCasterNotHearingArmor(ctx.caster()),
