@@ -7,15 +7,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
@@ -32,6 +28,9 @@ import static br.com.pemei.craftanddragons.common.modules.skills.capabilities.Pl
 @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public final class ActiveSkillControls {
     private static final String HUD_KEY = "hud.craftanddragons.active_skill.";
+    private static final KeyMapping OPEN_SKILLS = new KeyMapping("key.craftanddragons.open_skills",
+            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_K),
+            "key.categories.craftanddragons");
     private static final List<KeyMapping> KEYS = IntStream.range(0, SKILL_SLOT_COUNT)
             .mapToObj(slot -> new KeyMapping("key.craftanddragons.skill_slot." + (slot + 1),
                     KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(defaultKey(slot)),
@@ -46,6 +45,7 @@ public final class ActiveSkillControls {
     }
 
     public static void registerKeys(RegisterKeyMappingsEvent event) {
+        event.register(OPEN_SKILLS);
         KEYS.forEach(event::register);
     }
 
@@ -61,17 +61,6 @@ public final class ActiveSkillControls {
     }
 
     @SubscribeEvent
-    public static void onInventoryInit(ScreenEvent.Init.Post event) {
-        var screen = event.getScreen();
-        if (!(screen instanceof InventoryScreen) && !(screen instanceof CreativeModeInventoryScreen)) return;
-
-        int y = Math.min(screen.height - 23, (screen.height + 166) / 2 + 4);
-        event.addListener(Button.builder(Component.translatable("screen.craftanddragons.skill_slots.open"),
-                        button -> Minecraft.getInstance().setScreen(new SkillSlotsScreen(screen, state)))
-                .bounds((screen.width - 142) / 2, y, 142, 20).build());
-    }
-
-    @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         state = null;
     }
@@ -80,6 +69,12 @@ public final class ActiveSkillControls {
     public static void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         var client = Minecraft.getInstance();
+
+        while (OPEN_SKILLS.consumeClick()) {
+            if (client.screen == null && client.player != null && client.player.isAlive()) {
+                client.setScreen(new SkillSlotsScreen(state));
+            }
+        }
 
         for (int slot = 0; slot < KEYS.size(); slot++) {
             KeyMapping key = KEYS.get(slot);
@@ -122,7 +117,8 @@ public final class ActiveSkillControls {
             y += 12;
         }
         if (y == 31 && !state.skills().isEmpty()) {
-            graphics.drawString(client.font, Component.translatable(HUD_KEY + "unassigned"), x, y, 0xAAAAAA, true);
+            graphics.drawString(client.font, Component.translatable(HUD_KEY + "unassigned",
+                    OPEN_SKILLS.getTranslatedKeyMessage()), x, y, 0xAAAAAA, true);
         }
     }
 }

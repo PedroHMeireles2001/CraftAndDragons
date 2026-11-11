@@ -41,7 +41,7 @@
   "hud.craftanddragons.active_skill.mana": "Mana %s / %s",
   "hud.craftanddragons.active_skill.running": "%s · %ss",
   "hud.craftanddragons.active_skill.ready": "[%s] %s · %s mana",
-  "screen.craftanddragons.skill_slots.open": "Skill shortcuts",
+  "key.craftanddragons.open_skills": "Open skill shortcuts",
   "screen.craftanddragons.skill_slots.title": "Skill shortcuts",
   "screen.craftanddragons.skill_slots.empty": "Empty",
   "screen.craftanddragons.skill_slots.slot": "Slot %s [%s] · %s",
@@ -49,7 +49,7 @@
   "screen.craftanddragons.skill_slots.skill": "Equip %s · %s mana",
   "screen.craftanddragons.skill_slots.loading": "Loading skills…",
   "screen.craftanddragons.skill_slots.no_skills": "You haven't learned any active skills yet.",
-  "hud.craftanddragons.active_skill.unassigned": "Equip skills in Inventory → Skill shortcuts."
+  "hud.craftanddragons.active_skill.unassigned": "[%s] Equip skills"
 
 
 }

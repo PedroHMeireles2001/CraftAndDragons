@@ -17,7 +17,6 @@ import static br.com.pemei.craftanddragons.common.modules.skills.capabilities.Pl
 public final class SkillSlotsScreen extends Screen {
     private static final String KEY = "screen.craftanddragons.skill_slots.";
     private static final int ROW_HEIGHT = 23;
-    private final Screen parent;
     private ActiveSkillsStatePacket state;
     private int selectedSlot;
     private int page;
@@ -26,9 +25,8 @@ public final class SkillSlotsScreen extends Screen {
     private int panelWidth;
     private int panelHeight;
 
-    public SkillSlotsScreen(Screen parent, ActiveSkillsStatePacket state) {
+    public SkillSlotsScreen(ActiveSkillsStatePacket state) {
         super(Component.translatable(KEY + "title"));
-        this.parent = parent;
         this.state = state;
     }
 
@@ -134,8 +132,4 @@ public final class SkillSlotsScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    @Override
-    public void onClose() {
-        minecraft.setScreen(parent);
-    }
 }
