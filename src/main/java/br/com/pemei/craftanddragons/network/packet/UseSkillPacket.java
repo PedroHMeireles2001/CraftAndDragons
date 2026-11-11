@@ -66,7 +66,7 @@ public class UseSkillPacket {
             EffectTrigger trigger = EffectTrigger.valueOf(this.triggerName);
             Skill holder = ModSkills.REGISTRY.get(this.skillId);
 
-            if (holder == null) return; // Skill não encontrada
+            if (!(holder instanceof EffectHolder effectHolder)) return;
 
             // Tenta achar a entidade alvo pelo ID numérico
             LivingEntity target = null;
@@ -80,7 +80,7 @@ public class UseSkillPacket {
             // RECONSTRÓI O EFFECT CONTEXT COM SEGURANÇA NO SERVIDOR!
             EffectContext effectContext = new EffectContext(
                     level,
-                    (EffectHolder) holder,
+                    effectHolder,
                     trigger,
                     caster,
                     target != null ? target : caster, // Se não tiver alvo, o alvo é o próprio caster

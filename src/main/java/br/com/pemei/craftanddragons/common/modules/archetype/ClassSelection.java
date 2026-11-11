@@ -2,6 +2,7 @@ package br.com.pemei.craftanddragons.common.modules.archetype;
 
 import br.com.pemei.craftanddragons.common.modules.archetype.capabilities.PlayerClassCapabilityProvider;
 import br.com.pemei.craftanddragons.common.modules.skills.base.Skill;
+import br.com.pemei.craftanddragons.common.modules.skills.impl.SkillEffect;
 import br.com.pemei.craftanddragons.network.ModMessages;
 import br.com.pemei.craftanddragons.network.packet.OpenClassSelectionPacket;
 import net.minecraft.network.chat.Component;
@@ -45,7 +46,7 @@ public final class ClassSelection {
                             .sorted(Map.Entry.comparingByKey())
                             .map(entry -> new OpenClassSelectionPacket.Level(entry.getKey(), entry.getValue().stream()
                                     .sorted(Comparator.comparing(Skill::getId))
-                                    .map(skill -> new OpenClassSelectionPacket.SkillInfo(skill.getName(), skill.getDescription()))
+                                    .map(ClassSelection::describeSkill)
                                     .toList()))
                             .toList();
                     String key = "archetype." + MODID + "." + id;
@@ -56,5 +57,14 @@ public final class ClassSelection {
                 .toList();
         ModMessages.sendToPlayer(player, new OpenClassSelectionPacket(options));
         return options.isEmpty() ? 0 : 1;
+    }
+
+    private static OpenClassSelectionPacket.SkillInfo describeSkill(Skill skill) {
+        Component description = skill.getDescription();
+        if (skill instanceof SkillEffect effect && effect.hasUseEffects()) {
+            description = Component.translatable("screen.craftanddragons.class_selection.active_skill",
+                    effect.getUseManaCost(), description);
+        }
+        return new OpenClassSelectionPacket.SkillInfo(skill.getName(), description);
     }
 }

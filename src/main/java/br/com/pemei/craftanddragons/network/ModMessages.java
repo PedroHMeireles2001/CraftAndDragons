@@ -1,7 +1,10 @@
 package br.com.pemei.craftanddragons.network;
 
+import br.com.pemei.craftanddragons.network.packet.ActivateSkillPacket;
+import br.com.pemei.craftanddragons.network.packet.ActiveSkillsStatePacket;
 import br.com.pemei.craftanddragons.network.packet.OpenClassSelectionPacket;
 import br.com.pemei.craftanddragons.network.packet.SelectClassPacket;
+import br.com.pemei.craftanddragons.network.packet.SetSkillSlotPacket;
 import br.com.pemei.craftanddragons.network.packet.UseSkillPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +14,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ModMessages {
-    private static final String PROTOCOL_VERSION = "2.0";
+    private static final String PROTOCOL_VERSION = "4.0";
     private static SimpleChannel INSTANCE;
     private static int packetId = 0;
 
@@ -46,6 +49,24 @@ public class ModMessages {
                 .decoder(SelectClassPacket::decode)
                 .encoder(SelectClassPacket::encode)
                 .consumerMainThread(SelectClassPacket::handle)
+                .add();
+
+        net.messageBuilder(ActivateSkillPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ActivateSkillPacket::decode)
+                .encoder(ActivateSkillPacket::encode)
+                .consumerMainThread(ActivateSkillPacket::handle)
+                .add();
+
+        net.messageBuilder(ActiveSkillsStatePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ActiveSkillsStatePacket::decode)
+                .encoder(ActiveSkillsStatePacket::encode)
+                .consumerMainThread(ActiveSkillsStatePacket::handle)
+                .add();
+
+        net.messageBuilder(SetSkillSlotPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetSkillSlotPacket::decode)
+                .encoder(SetSkillSlotPacket::encode)
+                .consumerMainThread(SetSkillSlotPacket::handle)
                 .add();
     }
 

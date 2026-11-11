@@ -1,6 +1,7 @@
 package br.com.pemei.craftanddragons.common.modules.effect.base;
 
 import br.com.pemei.craftanddragons.common.modules.effect.impl.EffectContext;
+import net.minecraft.world.entity.Entity;
 
 import java.util.Set;
 
@@ -12,4 +13,8 @@ public interface EffectExecutor {
     public float getManaCost(float powerMultiplier);
 
     public String getName();
+
+    default int getRemainingTicks(Entity entity) {
+        return getEffects().stream().mapToInt(effect -> effect.getRemainingTicks(entity)).max().orElse(0);
+    }
 }

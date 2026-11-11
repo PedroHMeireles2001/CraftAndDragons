@@ -48,19 +48,22 @@ public class ModCapabilityEvents {
     // Preserva as skills ao morrer ou mudar de dimensão
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().getCapability(PlayerSkillsCapabilityProvider.PLAYER_SKILLS).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerSkillsCapabilityProvider.PLAYER_SKILLS).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                    newStore.reloadSkills();
-                });
-            });
+        if (event.getEntity().level().isClientSide()) return;
+        var original = event.getOriginal();
+        var replacement = event.getEntity();
+        original.reviveCaps();
+        try {
+            original.getCapability(PlayerClassCapabilityProvider.PLAYER_CLASS).ifPresent(oldStore ->
+                    replacement.getCapability(PlayerClassCapabilityProvider.PLAYER_CLASS).ifPresent(newStore ->
+                            newStore.copyFrom(oldStore)));
 
-            event.getOriginal().getCapability(PlayerClassCapabilityProvider.PLAYER_CLASS).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerClassCapabilityProvider.PLAYER_CLASS).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
+            original.getCapability(PlayerSkillsCapabilityProvider.PLAYER_SKILLS).ifPresent(oldStore ->
+                    replacement.getCapability(PlayerSkillsCapabilityProvider.PLAYER_SKILLS).ifPresent(newStore -> {
+                        newStore.copyFrom(oldStore);
+                        newStore.reloadSkills();
+                    }));
+        } finally {
+            original.invalidateCaps();
         }
     }
 }

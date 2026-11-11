@@ -1,7 +1,6 @@
 package br.com.pemei.craftanddragons.common.modules.effect.impl;
 
 import br.com.pemei.craftanddragons.common.modules.effect.base.AbstractEffectDecorator;
-import br.com.pemei.craftanddragons.common.modules.effect.base.ConditionalTimedEffect;
 import br.com.pemei.craftanddragons.common.modules.effect.base.EffectExecutor;
 
 import java.util.Map;

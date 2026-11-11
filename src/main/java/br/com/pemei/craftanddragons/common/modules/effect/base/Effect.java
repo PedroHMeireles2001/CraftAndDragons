@@ -80,6 +80,11 @@ public abstract class Effect implements EffectExecutor {
         return this.manaCost * powerMultiplier;
     }
 
+    @Override
+    public int getRemainingTicks(Entity entity) {
+        return 0;
+    }
+
     public enum TargetType {
         ENTITY{
 

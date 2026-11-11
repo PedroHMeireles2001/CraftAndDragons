@@ -1,7 +1,6 @@
 package br.com.pemei.craftanddragons.common.modules.effect.impl;
 
 import br.com.pemei.craftanddragons.common.modules.effect.base.AbstractEffectDecorator;
-import br.com.pemei.craftanddragons.common.modules.effect.base.ConditionalTimedEffect;
 import br.com.pemei.craftanddragons.common.modules.effect.base.EffectExecutor;
 import br.com.pemei.craftanddragons.common.modules.effect.base.TimerHolder;
 import br.com.pemei.craftanddragons.common.utils.TickScheduler;
@@ -50,7 +49,7 @@ public class LoopDecorator extends AbstractEffectDecorator implements TimerHolde
     @Override
     public void stopTimer(Entity entity) {
         UUID entityId = entity.getUUID();
-        TickScheduler.remove(this.taskId.get(entityId));
-        this.taskId.remove(entityId);
+        Integer id = this.taskId.remove(entityId);
+        if (id != null) TickScheduler.remove(id);
     }
 }

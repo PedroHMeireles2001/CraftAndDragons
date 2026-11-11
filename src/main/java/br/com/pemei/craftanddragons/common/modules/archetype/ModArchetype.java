@@ -18,7 +18,7 @@ public class ModArchetype {
         archetypes.put("barbarian", new PrincipalArchetype("barbarian", "Barbarian",
                 "Raised where steel cracks in the cold, the Barbarian strides into battle in furs. "
                         + "Years of hardship have made their body a shield of its own.",
-                3, Map.of(1, Set.of(ModSkills.ARMORLESS_DEFENSE)), Set.of(), false, 0f, 20));
+                3, Map.of(1, Set.of(ModSkills.ARMORLESS_DEFENSE, ModSkills.BARBARIAN_RAGE)), Set.of(), false, 100f, 20));
     }
 
     public static Set<String> getArchetypeNames() {

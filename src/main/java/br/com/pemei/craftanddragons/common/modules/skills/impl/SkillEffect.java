@@ -10,6 +10,7 @@ import br.com.pemei.craftanddragons.common.modules.skills.base.Skill;
 import br.com.pemei.craftanddragons.common.modules.skills.capabilities.PlayerSkillsCapability;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
@@ -29,6 +30,20 @@ public class SkillEffect extends Skill implements EffectHolder {
     public SkillEffect(String id, String  name, String description, EffectExecutor effect, EffectTrigger effectTrigger) {
         super(id, Component.literal(name),Component.literal(description));
         this.effectsExecutor = Map.of(effectTrigger,List.of(effect));
+    }
+
+    public boolean hasUseEffects() {
+        return !getEffectsExecutor(EffectTrigger.ON_SKILL_USE).isEmpty();
+    }
+
+    public int getUseManaCost() {
+        return Mth.ceil(getEffectsExecutor(EffectTrigger.ON_SKILL_USE).stream()
+                .mapToDouble(executor -> executor.getManaCost(1f)).sum());
+    }
+
+    public int getUseRemainingTicks(LivingEntity entity) {
+        return getEffectsExecutor(EffectTrigger.ON_SKILL_USE).stream()
+                .mapToInt(executor -> executor.getRemainingTicks(entity)).max().orElse(0);
     }
 
 
@@ -51,7 +66,7 @@ public class SkillEffect extends Skill implements EffectHolder {
         }
 
         EffectContext context = new EffectContext(entity.level(),this,EffectTrigger.ON_SKILL_APPLY,entity,null,null,null,null,1f);
-        this.effectsExecutor.get(EffectTrigger.ON_SKILL_APPLY).forEach(executor -> { executor.apply(context); });
+        getEffectsExecutor(EffectTrigger.ON_SKILL_APPLY).forEach(executor -> executor.apply(context));
 
     }
 

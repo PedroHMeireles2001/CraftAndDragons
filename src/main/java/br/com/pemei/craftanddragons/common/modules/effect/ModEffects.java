@@ -6,6 +6,7 @@ import br.com.pemei.craftanddragons.common.modules.effect.impl.ConditionalDecora
 import br.com.pemei.craftanddragons.common.modules.effect.impl.LoopDecorator;
 import br.com.pemei.craftanddragons.common.modules.effect.implEffects.AttributeModifierRemoveEffect;
 import br.com.pemei.craftanddragons.common.modules.effect.implEffects.PermanentAttributeModifierEffect;
+import br.com.pemei.craftanddragons.common.modules.effect.implEffects.RageEffect;
 import br.com.pemei.craftanddragons.common.modules.effect.implEffects.VorpalEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,6 +28,7 @@ public class ModEffects {
     private static final Supplier<Enchantment> noEnchantment = ()->null;
 
     public static EffectExecutor VORPAL_EFFECT = registerEffect("vorpal", VorpalEffect::new);
+    public static final RageEffect BARBARIAN_RAGE = new RageEffect();
 
     public static EffectExecutor ARMORLESS_DEFENSE = new LoopDecorator(
             

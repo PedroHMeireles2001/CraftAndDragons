@@ -19,6 +19,10 @@ public abstract class TemporaryEffect extends Effect {
         TickScheduler.schedule(this.duration,()->applyEnd(context));
     }
 
+    protected final int getDurationTicks() {
+        return duration;
+    }
+
     protected abstract void applyStart(EffectContext context);
     protected abstract void applyEnd(EffectContext context);
 }

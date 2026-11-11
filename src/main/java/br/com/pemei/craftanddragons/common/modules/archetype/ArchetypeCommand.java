@@ -136,7 +136,7 @@ public class ArchetypeCommand {
             String subclasses = principalArchetype.getSubArchetypes().stream().map(Archetype::getName).collect(Collectors.joining(", "));
             source.sendSystemMessage(Component.literal("subclasses options: %s".formatted(subclasses)));
             source.sendSystemMessage(Component.literal("subclass unlock level: %s".formatted(principalArchetype.getSubClassLevel())));
-            if(principalArchetype.isMagic()){
+            if(principalArchetype.getBaseMana() > 0){
                 source.sendSystemMessage(Component.literal("base mana: %s".formatted(principalArchetype.getBaseMana())));
             }
         }

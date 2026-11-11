@@ -8,9 +8,11 @@ import br.com.pemei.craftanddragons.common.modules.skills.base.Skill;
 import br.com.pemei.craftanddragons.common.modules.skills.capabilities.PlayerSkillsCapability;
 import br.com.pemei.craftanddragons.common.modules.skills.capabilities.PlayerSkillsCapabilityProvider;
 import br.com.pemei.craftanddragons.core.config.Config;
+import br.com.pemei.craftanddragons.events.ActiveSkillEvents;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.nbt.*;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -32,6 +34,7 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
     private SubArchetype subArchetype;
     private int classLevel;
     private double xp;
+    private int mana;
     @Getter(AccessLevel.PRIVATE)
     private Map<PrincipalArchetype, Integer> multiclassLevelMap = new HashMap<>();
     @Getter(AccessLevel.PRIVATE)
@@ -81,6 +84,7 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
 
     public void setClass(PrincipalArchetype newArchetype) {
         if (Objects.isNull(newArchetype)) return;
+        boolean firstClass = this.archetype == null;
 
         // 1. Se já tinha classe antiga, limpa as skills pertencentes ao arquétipo ANTIGO
         if (Objects.nonNull(this.archetype)) {
@@ -93,9 +97,27 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
         // 2. Atualiza o arquétipo e reseta a progressão
         this.archetype = newArchetype;
         this.classLevel = 0;
+        this.mana = firstClass ? getMaxMana() : Math.min(mana, getMaxMana());
 
         // 3. Concede o Nível 1 inicial da nova classe
         this.giveLevel();
+        if (player instanceof ServerPlayer serverPlayer) {
+            ActiveSkillEvents.sync(serverPlayer);
+        }
+    }
+
+    public int getMaxMana() {
+        return archetype == null ? 0 : Math.max(0, (int) archetype.getBaseMana());
+    }
+
+    public void regenerateMana() {
+        if (mana < getMaxMana()) mana++;
+    }
+
+    public boolean spendMana(int cost) {
+        if (cost < 0 || mana < cost) return false;
+        mana -= cost;
+        return true;
     }
 
     public void giveLevel(){
@@ -122,7 +144,7 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
         });
     }
 
-    private void reloadClass(){
+    public void reloadClass(){
         forEachSkillsInLevel(this.archetype, this.classLevel,
                 (skill, cap) -> cap.addSkill(skill),
                 (skill, cap) -> !cap.hasSkill(skill)
@@ -147,6 +169,7 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
         archetypeCompoundTag.put("main_archetype", archetypeTag);
         archetypeCompoundTag.put("class_level", classLevelTag);
         archetypeCompoundTag.put("class_xp", xpTag);
+        archetypeCompoundTag.putInt("mana", mana);
 
         if(Objects.nonNull(this.subArchetype)){
             StringTag subArchetypeTag = StringTag.valueOf(this.subArchetype.getId());
@@ -179,15 +202,14 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
         this.archetype = ModArchetype.getArchetype(nbt.getString("main_archetype"));
         this.classLevel = nbt.getInt("class_level");
         this.xp = nbt.getDouble("class_xp");
+        this.mana = nbt.contains("mana", Tag.TAG_ANY_NUMERIC)
+                ? Math.max(0, Math.min(nbt.getInt("mana"), getMaxMana())) : getMaxMana();
 
         if (nbt.contains("main_sub_archetype")) {
             this.subArchetype = ModArchetype.getSubArchetype(nbt.getString("main_sub_archetype"));
         }
 
-        if(Config.ENABLE_MULTICLASS.get()){
-            if(!nbt.contains("multi_class")) {
-                return;
-            }
+        if(Config.ENABLE_MULTICLASS.get() && nbt.contains("multi_class")){
             ListTag listTag = (ListTag) nbt.get("multi_class");
             int listSize = Objects.nonNull(listTag) ? listTag.size() : 0;
             for (int i = 0; i < listSize; i++) {
@@ -210,6 +232,7 @@ public class PlayerClassCapability implements INBTSerializable<CompoundTag> {
         this.subArchetype = oldStore.subArchetype;
         this.classLevel = oldStore.classLevel;
         this.xp = oldStore.xp;
+        this.mana = oldStore.mana;
         if(Config.ENABLE_MULTICLASS.get()){
             this.multiclassLevelMap.clear();
             this.multiclassSubArchetypeMap.clear();
