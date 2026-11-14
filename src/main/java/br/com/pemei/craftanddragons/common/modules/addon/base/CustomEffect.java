@@ -24,7 +24,7 @@ public record CustomEffect(@Nullable String name,@Nullable String registerType,@
         Map<String,Object> params = JsonAddonLoader.extractParams(this);
         EffectExecutor executor = customEffectFactory.create(manaCost,params);
         if(Objects.nonNull(decorators)) {
-            executor = decorators.wrap(executor);
+            executor = decorators.toDecorator(executor);
         }
 
 

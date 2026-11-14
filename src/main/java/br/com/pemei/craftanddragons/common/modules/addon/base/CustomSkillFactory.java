@@ -26,7 +26,8 @@ public enum CustomSkillFactory {
                             (entry -> EffectTrigger.valueOf(entry.getKey())),
                             (entry -> entry.getValue().stream().map((entryValue -> ModEffects.getEffect(entryValue).orElseThrow())).toList())
                     ));
-            return new SkillEffect(id, Component.literal(name),Component.literal(description),parsedEffects);
+            int level = (int) params.getOrDefault("level", 1);
+            return new SkillEffect(id, level, Component.literal(name),Component.literal(description),parsedEffects);
         }
     },ATTRIBUTE {
         @Override
@@ -34,7 +35,8 @@ public enum CustomSkillFactory {
             Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(params.get("attribute").toString()));
             double value = (double) params.get("value");
             AttributeModifier.Operation operation = AttributeModifier.Operation.valueOf((String) params.getOrDefault("operation", "ADDITION"));
-            return new SkillAttribute(id, Component.literal(name),Component.literal(description),attribute,value,operation);
+            int level = (int) params.getOrDefault("level", 1);
+            return new SkillAttribute(id, level, Component.literal(name),Component.literal(description),attribute,value,operation);
         }
     };
 

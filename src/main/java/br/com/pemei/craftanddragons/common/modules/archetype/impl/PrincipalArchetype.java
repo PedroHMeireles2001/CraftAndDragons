@@ -16,7 +16,13 @@ public class PrincipalArchetype extends Archetype {
     private final float baseHealth;
 
     public PrincipalArchetype(String id,String name, String description, int subClassLevel, Map<Integer, Set<Skill>> skillsPerLevel, Set<SubArchetype> subArchetypes, boolean isMagic, float baseMana, float baseHealth) {
-        super(id,name, description, skillsPerLevel);
+        this(id, name, "", description, subClassLevel, skillsPerLevel, subArchetypes, isMagic, baseMana, baseHealth);
+    }
+
+    public PrincipalArchetype(String id, String name, String iconPath, String description, int subClassLevel,
+                             Map<Integer, Set<Skill>> skillsPerLevel, Set<SubArchetype> subArchetypes,
+                             boolean isMagic, float baseMana, float baseHealth) {
+        super(id, name, iconPath == null ? "" : iconPath, description, skillsPerLevel);
         this.subArchetypes = subArchetypes;
         this.subClassLevel = subClassLevel;
         this.isMagic = isMagic;

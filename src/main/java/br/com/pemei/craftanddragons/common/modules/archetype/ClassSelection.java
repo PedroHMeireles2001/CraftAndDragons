@@ -50,7 +50,7 @@ public final class ClassSelection {
                                     .toList()))
                             .toList();
                     String key = "archetype." + MODID + "." + id;
-                    return new OpenClassSelectionPacket.Option(id,
+                    return new OpenClassSelectionPacket.Option(id, archetype.getIconPath(),
                             Component.translatableWithFallback(key + ".name", archetype.getName()),
                             Component.translatableWithFallback(key + ".description", archetype.getDescription()), levels);
                 })

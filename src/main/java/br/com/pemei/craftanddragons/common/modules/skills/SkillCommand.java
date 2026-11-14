@@ -131,6 +131,7 @@ public class SkillCommand {
         }
 
         source.sendSystemMessage(Component.literal("id: "+skill.toString()));
+        source.sendSystemMessage(Component.literal("level: " + skill.getLevel()));
         source.sendSystemMessage(Component.literal("name: "+skill.getName()));
         source.sendSystemMessage(Component.literal("description: "+skill.getDescription()));
         if(skill instanceof SkillEffect skillEffect) {
@@ -183,7 +184,7 @@ public class SkillCommand {
         }
 
         player.getCapability(PlayerSkillsCapabilityProvider.PLAYER_SKILLS).ifPresent(cap -> {
-            if (!cap.existsSkill(skill)) {
+            if (!cap.hasSkill(skill.getId())) {
                 source.sendFailure(Component.literal("§cThe player " + player.getScoreboardName() + " don´t have this skill."));
             } else {
                 cap.removeSkill(skill);

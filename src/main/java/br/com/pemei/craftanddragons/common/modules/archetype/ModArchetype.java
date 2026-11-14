@@ -15,7 +15,8 @@ public class ModArchetype {
         archetypes.clear();
         subarchetypes.clear();
         xpRequiredForNextLevel = List.of(0d,300d,900d,2700d,6500d,14000d);
-        archetypes.put("barbarian", new PrincipalArchetype("barbarian", "Barbarian",
+        registerArchetype("barbarian", new PrincipalArchetype("barbarian", "Barbarian",
+                "craftanddragons:textures/gui/archetypes/barbarian.png",
                 "Raised where steel cracks in the cold, the Barbarian strides into battle in furs. "
                         + "Years of hardship have made their body a shield of its own.",
                 3, Map.of(1, Set.of(ModSkills.ARMORLESS_DEFENSE, ModSkills.BARBARIAN_RAGE)), Set.of(), false, 100f, 20));
@@ -37,5 +38,12 @@ public class ModArchetype {
             return null;
         }
         return subarchetypes.get(mainSubArchetype);
+    }
+
+    public static void registerArchetype(String archetypeId, PrincipalArchetype archetype) {
+        archetypes.put(archetypeId, archetype);
+        archetype.getSkillsPerLevel().values().forEach(skills -> skills.forEach(ModSkills::register));
+        archetype.getSubArchetypes().forEach(subClass ->
+                subClass.getSkillsPerLevel().values().forEach(skills -> skills.forEach(ModSkills::register)));
     }
 }

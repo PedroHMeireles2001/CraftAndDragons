@@ -23,7 +23,7 @@ public record CustomEffectChain(String id,String name,@Nullable String extendsCh
     public EffectExecutor getExecutor() throws HomebrewParseException {
         EffectExecutor executor = toChain();
         if(Objects.nonNull(decorators)) {
-            executor = decorators.wrap(executor);
+            executor = decorators.toDecorator(executor);
         }
         return executor;
     }

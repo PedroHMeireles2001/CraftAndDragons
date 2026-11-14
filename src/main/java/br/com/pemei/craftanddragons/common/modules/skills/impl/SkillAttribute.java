@@ -20,7 +20,11 @@ public class SkillAttribute extends Skill {
     private final UUID modifierId;
 
     public SkillAttribute(String id, Component name, Component description, Attribute attribute, double value, AttributeModifier.Operation operation) {
-        super(id, name, description);
+        this(id, 1, name, description, attribute, value, operation);
+    }
+
+    public SkillAttribute(String id, int level, Component name, Component description, Attribute attribute, double value, AttributeModifier.Operation operation) {
+        super(id, level, name, description);
         this.attribute = attribute;
         this.value = value;
         this.operation = operation;

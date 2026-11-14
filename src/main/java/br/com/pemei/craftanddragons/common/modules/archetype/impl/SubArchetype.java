@@ -9,6 +9,10 @@ import java.util.Set;
 public class SubArchetype extends Archetype {
 
     public SubArchetype(String name, String id, String description, Map<Integer, Set<Skill>> skillsPerLevel) {
-        super(id,name, description, skillsPerLevel);
+        this(name, id, "", description, skillsPerLevel);
+    }
+
+    public SubArchetype(String name, String id, String iconPath, String description, Map<Integer, Set<Skill>> skillsPerLevel) {
+        super(id, name, iconPath == null ? "" : iconPath, description, skillsPerLevel);
     }
 }

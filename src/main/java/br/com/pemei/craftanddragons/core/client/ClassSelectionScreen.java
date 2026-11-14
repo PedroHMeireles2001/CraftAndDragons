@@ -109,7 +109,7 @@ public final class ClassSelectionScreen extends Screen {
         if (options.isEmpty()) return;
 
         Option option = options.get(selected);
-        portrait = ResourceLocation.tryParse(MODID + ":textures/gui/archetypes/" + option.id() + ".png");
+        portrait = option.iconPath().isBlank() ? null : ResourceLocation.tryParse(option.iconPath());
         if (portrait != null && minecraft.getResourceManager().getResource(portrait).isEmpty()) {
             portrait = null;
         }

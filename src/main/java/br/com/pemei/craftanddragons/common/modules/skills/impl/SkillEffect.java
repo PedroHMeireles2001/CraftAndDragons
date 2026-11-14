@@ -23,13 +23,20 @@ public class SkillEffect extends Skill implements EffectHolder {
     private final Map<EffectTrigger, List<EffectExecutor>> effectsExecutor;
 
     public SkillEffect(String id, Component name, Component description, Map<EffectTrigger, List<EffectExecutor>> effectsExecutor) {
-        super(id, name, description);
+        this(id, 1, name, description, effectsExecutor);
+    }
+
+    public SkillEffect(String id, int level, Component name, Component description, Map<EffectTrigger, List<EffectExecutor>> effectsExecutor) {
+        super(id, level, name, description);
         this.effectsExecutor = effectsExecutor;
     }
 
     public SkillEffect(String id, String  name, String description, EffectExecutor effect, EffectTrigger effectTrigger) {
-        super(id, Component.literal(name),Component.literal(description));
-        this.effectsExecutor = Map.of(effectTrigger,List.of(effect));
+        this(id, 1, name, description, effect, effectTrigger);
+    }
+
+    public SkillEffect(String id, int level, String name, String description, EffectExecutor effect, EffectTrigger effectTrigger) {
+        this(id, level, Component.literal(name), Component.literal(description), Map.of(effectTrigger, List.of(effect)));
     }
 
     public boolean hasUseEffects() {

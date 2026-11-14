@@ -13,7 +13,12 @@ import java.util.Set;
 public abstract class Archetype {
     private final String id;
     private final String name;
+    private final String iconPath;
     private final String description;
     private final Map<Integer, Set<Skill>> skillsPerLevel;
+
+    protected Archetype(String id, String name, String description, Map<Integer, Set<Skill>> skillsPerLevel) {
+        this(id, name, "", description, skillsPerLevel);
+    }
 
 }

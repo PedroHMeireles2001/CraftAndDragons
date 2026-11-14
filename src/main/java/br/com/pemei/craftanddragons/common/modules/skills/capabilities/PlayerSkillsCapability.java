@@ -43,19 +43,24 @@ public class PlayerSkillsCapability implements INBTSerializable<CompoundTag> {
     }
 
     public void addSkill(Skill skill) {
+        Skill previous = skills.stream().filter(learned -> learned.getId().equals(skill.getId())).findFirst().orElse(null);
+        if (previous != null) {
+            if (previous.getLevel() >= skill.getLevel()) return;
+            previous.remove(entity, this);
+            skills.remove(previous);
+        }
         skills.add(skill);
         skill.apply(entity,this);
+        if (!(skill instanceof SkillEffect effect) || !effect.hasUseEffects()) {
+            Collections.replaceAll(skillSlots, skill.getId(), "");
+        }
     }
 
     public boolean existsSkill(Skill skill) {
-        return this.existsSkill(skill.getId());
+        return hasSkill(skill);
     }
     public boolean existsSkill(String skillId) {
-        Skill skill = ModSkills.REGISTRY.get(skillId);
-        if(Objects.isNull(skill)) {
-            return false;
-        }
-        return skills.contains(skill);
+        return hasSkill(skillId);
     }
 
     public List<PlayerEffects> getActiveEffects() {
@@ -153,7 +158,10 @@ public class PlayerSkillsCapability implements INBTSerializable<CompoundTag> {
         ListTag list = new ListTag();
 
         for (Skill skill : skills) {
-            list.add(StringTag.valueOf(skill.toString()));
+            CompoundTag learned = new CompoundTag();
+            learned.putString("id", skill.getId());
+            learned.putInt("level", skill.getLevel());
+            list.add(learned);
         }
 
         nbt.put(SKILLS_KEY, list);
@@ -173,13 +181,15 @@ public class PlayerSkillsCapability implements INBTSerializable<CompoundTag> {
         int listSize = Objects.nonNull(list) ? list.size() : 0;
 
         for (int i = 0; i < listSize; i++) {
-            Skill skill = ModSkills.REGISTRY.get(list.getString(i));
+            boolean legacy = list.getElementType() == Tag.TAG_STRING;
+            String id = legacy ? list.getString(i) : list.getCompound(i).getString("id");
+            Skill skill = legacy ? ModSkills.REGISTRY.get(id)
+                    : ModSkills.getSkill(id, list.getCompound(i).getInt("level"));
             if(Objects.isNull(skill)) {
-                LOGGER.error("Invalid skill id {}",list.getString(i));
+                LOGGER.error("Invalid saved skill {}", id);
                 continue;
             }
-            skills.add(skill);
-            skill.apply(entity,this);
+            addSkill(skill);
         }
         ListTag slots = nbt.getList(SKILL_SLOTS_KEY, Tag.TAG_STRING);
         for (int slot = 0; slot < Math.min(slots.size(), SKILL_SLOT_COUNT); slot++) {
@@ -188,10 +198,11 @@ public class PlayerSkillsCapability implements INBTSerializable<CompoundTag> {
     }
 
     public void removeSkill(Skill skill) {
-
-        skills.remove(skill);
-        Collections.replaceAll(skillSlots, skill.getId(), "");
-        skill.remove(entity,this);
+        Skill learned = skills.stream().filter(current -> current.getId().equals(skill.getId())).findFirst().orElse(null);
+        if (learned == null) return;
+        learned.remove(entity, this);
+        skills.remove(learned);
+        Collections.replaceAll(skillSlots, learned.getId(), "");
     }
 
     public void clearSkills() {
@@ -209,7 +220,8 @@ public class PlayerSkillsCapability implements INBTSerializable<CompoundTag> {
     }
 
     public boolean hasSkill(Skill skill) {
-        return this.hasSkill(skill.getId());
+        return skills.stream().anyMatch(learned -> learned.getId().equals(skill.getId())
+                && learned.getLevel() >= skill.getLevel());
     }
 
     public boolean hasSkill(String skillId) {

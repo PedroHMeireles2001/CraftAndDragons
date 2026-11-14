@@ -10,9 +10,12 @@ import net.minecraft.network.chat.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class ModSkills {
     public static final Map<String, Skill> REGISTRY = new HashMap<>();
+    private static final Map<String, NavigableMap<Integer, Skill>> SKILL_LEVELS = new HashMap<>();
     public static final Skill ARMORLESS_DEFENSE = new SkillEffect("skill_armorlessdefense",
             Component.translatable("skill.craftanddragons.armorless_defense.name"),
             Component.translatable("skill.craftanddragons.armorless_defense.description"),
@@ -24,6 +27,20 @@ public class ModSkills {
             Map.of(EffectTrigger.ON_SKILL_USE, List.of(ModEffects.BARBARIAN_RAGE)));
 
     static {
-        REGISTRY.put(BARBARIAN_RAGE.getId(), BARBARIAN_RAGE);
+        register(ARMORLESS_DEFENSE);
+        register(BARBARIAN_RAGE);
+    }
+
+    public static void register(Skill skill) {
+        var levels = SKILL_LEVELS.computeIfAbsent(skill.getId(), id -> new TreeMap<>());
+        levels.put(skill.getLevel(), skill);
+        REGISTRY.put(skill.getId(), levels.lastEntry().getValue());
+    }
+
+    public static Skill getSkill(String id, int level) {
+        Skill current = REGISTRY.get(id);
+        if (current != null && current.getLevel() == level) return current;
+        var levels = SKILL_LEVELS.get(id);
+        return levels == null ? null : levels.get(level);
     }
 }

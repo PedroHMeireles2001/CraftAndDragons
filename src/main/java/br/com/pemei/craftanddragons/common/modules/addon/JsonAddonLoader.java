@@ -1,5 +1,7 @@
 package br.com.pemei.craftanddragons.common.modules.addon;
 
+import br.com.pemei.craftanddragons.common.modules.addon.base.CustomClass;
+import br.com.pemei.craftanddragons.common.modules.archetype.ModArchetype;
 import br.com.pemei.craftanddragons.common.modules.effect.annotations.OptionalParam;
 import br.com.pemei.craftanddragons.common.modules.addon.base.CustomEffectChain;
 import br.com.pemei.craftanddragons.common.modules.addon.base.CustomSkill;
@@ -101,14 +103,32 @@ public class JsonAddonLoader {
                         .map(JsonAddonLoader::readStringJson)
                         .filter(Optional::isPresent)
                         .map(effectString -> GSON.fromJson(effectString.get(), CustomSkill.class))
+                        .map(CustomSkill::toSkill)
+                        .forEach(skill -> {
+                            ADDON_REGISTRY.put(addonName, skill.getId());
+                            ModSkills.register(skill);
+                        });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Path classDir = path.resolve("classes");
+        if (Files.exists(classDir) && Files.isDirectory(classDir)) {
+            try(Stream<Path> classPathList = Files.list(path.resolve("classes"))) {
+                classPathList
+                        .filter(p -> p.getFileName().toString().endsWith(".json"))
+                        .map(JsonAddonLoader::readStringJson)
+                        .filter(Optional::isPresent)
+                        .map(effectString -> GSON.fromJson(effectString.get(), CustomClass.class))
                         .collect(Collectors.toMap(
-                                CustomSkill::getId,
-                                CustomSkill::toSkill,
+                                CustomClass::id,
+                                CustomSkill::toClass,
                                 (existing, replacement) -> replacement
                         ))
                         .forEach((name,skill) -> {
                             ADDON_REGISTRY.put(addonName, skill.getId());
-                            ModSkills.REGISTRY.put(name, skill);
+                            ModArchetype.registerArchetype(name, skill);
                         });
             } catch (IOException e) {
                 throw new RuntimeException(e);
